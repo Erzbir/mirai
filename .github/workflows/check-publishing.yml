@@ -28,6 +28,10 @@ jobs:
       matrix:
         os:
           - macos-12
+        include:
+          - os: macos-12
+            targetName: macosX64
+            parallelCompilation: true
     env:
       gradleArgs: --scan
       isMac: ${{ startsWith(matrix.os, 'macos') }}
