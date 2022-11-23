@@ -43,6 +43,10 @@ val publishMiraiArtifactsToMavenLocal by tasks.registering {
     }
     dependsOn(publishTasks)
 
+    doFirst {
+        logger.info("[publishMiraiArtifactsToMavenLocal] Project version is '${project.version}'.")
+    }
+
     doLast {
         // delete shadowed Jars, since Kotlin can't compile modules that depend on them.
         rootProject.subprojects
