@@ -29,7 +29,6 @@ jobs:
         os:
           - macos-12
     env:
-      enableLocalPublishingTest: 'true'
       gradleArgs: --scan
       isMac: ${{ startsWith(matrix.os, 'macos') }}
       isWindows: ${{ startsWith(matrix.os, 'windows') }}
@@ -77,11 +76,9 @@ jobs:
 
 
       - name: Build and Publish Local Artifacts
-        if: ${{ env.enableLocalPublishingTest == 'true' }}
         run: ./gradlew :mirai-deps-test:publishMiraiArtifactsToMavenLocal ${{ env.gradleArgs }} "-Dmirai.build.project.version=2.99.0-deps-test" "-Porg.gradle.parallel=${{ matrix.parallelCompilation }}"
 
       - name: Check Publication
-        if: ${{ env.enableLocalPublishingTest == 'true' }}
         run: ./gradlew :mirai-deps-test:check ${{ env.gradleArgs }} "-Dmirai.build.project.version=2.99.0-deps-test" "-Dmirai.deps.test.must.run=true"
 
 
@@ -107,8 +104,7 @@ jobs:
     env:
       # FIXME there must be two or more targets, or we'll get error on `@OptionalExpectation`
       # > Declaration annotated with '@OptionalExpectation' can only be used in common module sources
-      enableLocalPublishingTest: 'true'
-      gradleArgs: --scan  "-Dmirai.target=jvm;${{ matrix.targetName }};!other" "-Pkotlin.compiler.execution.strategy=in-process" "-Dorg.gradle.jvmargs=-Xmx4096m" "-Dfile.encoding=UTF-8"
+      gradleArgs: --scan  "-Dmirai.target=jvm;${{ matrix.targetName }};~others" "-Pkotlin.compiler.execution.strategy=in-process" "-Dorg.gradle.jvmargs=-Xmx4096m" "-Dfile.encoding=UTF-8"
       isMac: ${{ startsWith(matrix.os, 'macos') }}
       isWindows: ${{ startsWith(matrix.os, 'windows') }}
       isUbuntu: ${{ startsWith(matrix.os, 'ubuntu') }}
@@ -189,22 +185,8 @@ jobs:
       - name: Clean and download dependencies
         run: ./gradlew clean ${{ env.gradleArgs }}
 
-      - run: >
-          ./gradlew updateSnapshotVersion ${{ env.gradleArgs }}
-        if: github.event.pusher
-        env:
-          MIRAI_IS_SNAPSHOTS_PUBLISHING: true
-          SNAPSHOTS_PUBLISHING_USER: ${{ secrets.SNAPSHOTS_PUBLISHING_USER }}
-          SNAPSHOTS_PUBLISHING_KEY: ${{ secrets.SNAPSHOTS_PUBLISHING_KEY }}
-          SNAPSHOTS_PUBLISHING_URL: ${{ secrets.SNAPSHOTS_PUBLISHING_URL }}
-          CURRENT_BRANCH_NAME: dev # always use -dev for now
-
-
-
       - name: Build and Publish Local Artifacts
-        if: ${{ env.enableLocalPublishingTest == 'true' }}
         run: ./gradlew :mirai-deps-test:publishMiraiArtifactsToMavenLocal ${{ env.gradleArgs }} "-Dmirai.build.project.version=2.99.0-deps-test" "-Porg.gradle.parallel=${{ matrix.parallelCompilation }}"
 
       - name: Check Publication
-        if: ${{ env.enableLocalPublishingTest == 'true' }}
         run: ./gradlew :mirai-deps-test:check ${{ env.gradleArgs }} "-Dmirai.build.project.version=2.99.0-deps-test" "-Dmirai.deps.test.must.run=true"
