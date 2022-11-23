@@ -78,7 +78,7 @@ jobs:
 
       - name: Build and Publish Local Artifacts
         if: ${{ env.enableLocalPublishingTest == 'true' }}
-        run: ./gradlew :mirai-deps-test:publishMiraiLocalArtifacts ${{ env.gradleArgs }} "-Dmirai.build.project.version=2.99.0-deps-test"  "-Porg.gradle.parallel=${{ matrix.parallelCompilation }}"
+        run: ./gradlew :mirai-deps-test:publishMiraiArtifactsToMavenLocal ${{ env.gradleArgs }} "-Dmirai.build.project.version=2.99.0-deps-test" "-Porg.gradle.parallel=${{ matrix.parallelCompilation }}"
 
       - name: Check Publication
         if: ${{ env.enableLocalPublishingTest == 'true' }}
@@ -203,7 +203,7 @@ jobs:
 
       - name: Build and Publish Local Artifacts
         if: ${{ env.enableLocalPublishingTest == 'true' }}
-        run: ./gradlew :mirai-deps-test:publishMiraiLocalArtifacts ${{ env.gradleArgs }} "-Dmirai.build.project.version=2.99.0-deps-test"  "-Porg.gradle.parallel=${{ matrix.parallelCompilation }}"
+        run: ./gradlew :mirai-deps-test:publishMiraiArtifactsToMavenLocal ${{ env.gradleArgs }} "-Dmirai.build.project.version=2.99.0-deps-test" "-Porg.gradle.parallel=${{ matrix.parallelCompilation }}"
 
       - name: Check Publication
         if: ${{ env.enableLocalPublishingTest == 'true' }}

@@ -21,14 +21,21 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 // mirai-deps-test DEPENDS ON THE PATH.
 
 object Versions {
-    val project = System.getenv("mirai.build.project.version")?.takeIf { it.isNotBlank() }
+    var project = System.getenv("mirai.build.project.version")?.takeIf { it.isNotBlank() }
         ?: System.getProperty("mirai.build.project.version")?.takeIf { it.isNotBlank() }
-        ?: /*PROJECT_VERSION_START*/"2.14.0-dev-shadow-6"/*PROJECT_VERSION_END*/
+        ?: /*PROJECT_VERSION_START*/"2.14.0-dev-shadow-6"
+        /*PROJECT_VERSION_END*/
+        private set
 
-    val core = project
-    val console = project
-    val consoleIntellij = "221-$project-171-2" // idea-mirai-kotlin-patch
-    val consoleTerminal = project
+    val core get() = project
+    val console get() = project
+    val consoleIntellij get() = "221-$project-171-2" // idea-mirai-kotlin-patch
+    val consoleTerminal get() = project
+
+    fun setProjectVersion(version: String) {
+        project = version
+        rootProject.allprojects.forEach { it.version = version }
+    }
 
     const val kotlinCompiler = "1.7.10"
     const val kotlinStdlib = kotlinCompiler
